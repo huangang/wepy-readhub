@@ -44,7 +44,7 @@
   <view class="container">
       <view class="article" wx:for="{{news}}" wx:key="item">
         <view class="touchable">
-          <view class="title" hover-class="hover-title">{{item.title}}</view>
+          <view class="title" hover-class="hover-title" bindtap="tapTitle" data-url="{{item.url}}">{{item.title}}</view>
           <view wx:if="{{item.summary}}" class="summary">{{item.summary}}</view>
           <view class="meta">{{item.siteName}} / {{item.publishDate}}</view>
         </view>
@@ -65,6 +65,11 @@
     };
 
     methods = {
+      tapTitle: async function (e) {
+        let url = e.currentTarget.dataset.url
+        console.log(url)
+        wepy.navigateTo({url: 'html?url=' + url})
+      }
     };
     events = {
     };

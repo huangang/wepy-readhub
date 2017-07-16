@@ -30,7 +30,7 @@
 <template>
   <view class="container">
     <view class="article" wx:for="{{topics}}" wx:key="item" wx-on:click="toggle(item)">
-      <view class="title">
+      <view class="title" bindtap="tapTitle">
         <view class="blink"> {{item.title}}
           <view class="inline-block">
             <view class="time">{{item.createdAt}}</view>
@@ -46,14 +46,12 @@
 <script>
   import wepy from 'wepy'
   import api from '../api/api.js'
-  import Toast from 'wepy-com-toast'
 
   export default class Index extends wepy.page {
     config = {
       navigationBarTitleText: '热门话题'
     };
     components = {
-      toast: Toast
     };
     data = {
       topics: []
@@ -65,6 +63,9 @@
     methods = {
       toggle: function (item) {
         item.show = !item.show
+      },
+      tapTitle: function (e) {
+        console.log(e)
       }
     };
 
@@ -76,6 +77,8 @@
       this.topics = res.data.data
       console.log(this.topics)
       this.setData({topics: this.topics})
+//      let resp = await api.getHtmlByUrl('http://m.cnbeta.com/view/631939.htm')
+//      console.log(resp)
     }
 
     /**
