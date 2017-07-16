@@ -1,0 +1,94 @@
+<style lang="less">
+  .container{
+    background-color: #fff;
+    width: 100%;
+  }
+  .touchable{
+    display: block;
+    -webkit-transition: background-color .2s ease-out;
+    transition: background-color .2s ease-out;
+    position: relative;
+    padding: 15px;
+  }
+  .title{
+    color: #545454;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 1.4em;
+  }
+  .hover-title{color: #999!important;}
+  .summary{
+    height: 66px;
+    overflow: hidden;
+    margin-top: 6px;
+    margin-bottom: 15px;
+    font-size: 14px;
+    color: #999;
+    line-height: 1.6em;
+  }
+  .meta{
+    color: #999;
+    font-size: 12px;
+    line-height: 1.2em;
+  }
+  .one-px-line{
+    border: 1px solid #fff;
+    border-bottom: 1px solid #ddd;
+    position: relative;
+    clear: both;
+    margin-left: 15px;
+    margin-right: 15px;
+  }
+</style>
+<template>
+  <view class="container">
+      <view class="article" wx:for="{{news}}" wx:key="item">
+        <view class="touchable">
+          <view class="title" hover-class="hover-title">{{item.title}}</view>
+          <view wx:if="{{item.summary}}" class="summary">{{item.summary}}</view>
+          <view class="meta">{{item.siteName}} / {{item.publishDate}}</view>
+        </view>
+        <view class="one-px-line"></view>
+      </view>
+  </view>
+</template>
+<script>
+  import wepy from 'wepy'
+  import api from '../api/api.js'
+
+  export default class News extends wepy.page {
+    config = {
+      navigationBarTitleText: '科技动态'
+    };
+    data = {
+      news: []
+    };
+
+    methods = {
+    };
+    events = {
+    };
+
+    async onLoad() {
+      let res = await api.getNews()
+      this.news = res.data.data
+      console.log(this.news)
+      this.setData({news: this.news})
+    }
+
+    /**
+     * 下拉加载更多
+     */
+    async onReachBottom () {
+      let lastNews = this.news[this.news.length - 1]
+      let res = await api.getNews({
+        lastCursor: Date.parse((new Date(lastNews.publishDate)))
+      })
+      if (res && res.data && res.data.data) {
+        this.news = this.news.concat(res.data.data)
+        console.log(res.data.data)
+        this.setData({news: this.news})
+      }
+    }
+  }
+</script>

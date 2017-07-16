@@ -1,0 +1,97 @@
+<style lang="less">
+  .container{
+    background-color: #fff;
+    width: 100%;
+  }
+  .touchable{
+    display: block;
+    -webkit-transition: background-color .2s ease-out;
+    transition: background-color .2s ease-out;
+    position: relative;
+    padding: 15px;
+  }
+  .title{
+    color: #545454;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 1.4em;
+  }
+  .summary{
+    height: 66px;
+    overflow: hidden;
+    margin-top: 6px;
+    margin-bottom: 15px;
+    font-size: 14px;
+    color: #999;
+    line-height: 1.6em;
+  }
+  .meta{
+    color: #999;
+    font-size: 12px;
+    line-height: 1.2em;
+  }
+  .one-px-line{
+    border: 1px solid #fff;
+    border-bottom: 1px solid #ddd;
+    position: relative;
+    clear: both;
+    margin-left: 15px;
+    margin-right: 15px;
+  }
+</style>
+<template>
+  <scroll-view class="container" scroll-y="true" style="height: 100%;" bindscrolltolower="loadMore">
+    <view class="article" wx:for="{{techNews}}" wx:key="item">
+      <view class="touchable">
+        <view class="title">{{item.title}}</view>
+        <view class="summary">{{item.summary}}</view>
+        <view class="meta">{{item.siteName}} / {{item.publishDate}}</view>
+      </view>
+      <view class="one-px-line"></view>
+    </view>
+  </scroll-view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import api from '../api/api.js'
+
+  export default class Tech extends wepy.page {
+    config = {
+      navigationBarTitleText: '开发者资讯'
+    };
+    data = {
+      techNews: []
+    };
+
+    methods = {
+      loadMore: async function (e) {
+      }
+    };
+
+    events = {
+    };
+
+    async onLoad() {
+      let res = await api.getTechNews()
+      this.techNews = res.data.data
+      console.log(this.techNews)
+      this.setData({techNews: this.techNews})
+    }
+
+    /**
+     * 下拉加载更多
+     */
+    async onReachBottom () {
+      let lastNews = this.techNews[this.techNews.length - 1]
+      let res = await api.getTechNews({
+        lastCursor: Date.parse((new Date(lastNews.publishDate)))
+      })
+      if (res && res.data && res.data.data) {
+        this.techNews = this.techNews.concat(res.data.data)
+        console.log(res.data.data)
+        this.setData({techNews: this.techNews})
+      }
+    }
+  }
+</script>
