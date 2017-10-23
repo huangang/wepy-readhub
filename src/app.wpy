@@ -1,7 +1,7 @@
 <style lang="less">
 .container {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  color: #2c3e50;
+  color: #f0f0f0;
   margin: 0;
 }
 </style>
@@ -14,43 +14,18 @@ export default class extends wepy.app {
   config = {
     pages: [
       'pages/index',
-      'pages/news',
-      'pages/tech',
-      'pages/html'
+      'pages/topic'
     ],
     window: {
       backgroundTextStyle: 'light',
-      navigationBarBackgroundColor: '#fff',
-      navigationBarTitleText: 'ReadHUb',
+      navigationBarBackgroundColor: '#f0f0f0',
+      navigationBarTitleText: 'ReadHub',
       navigationBarTextStyle: 'black',
       enablePullDownRefresh: true
-    },
-    tabBar: {
-      color: '#b4b4b4',
-      selectedColor: '#425f6e',
-      backgroundColor: '#fff',
-      borderStyle: 'white',
-      list: [{
-        pagePath: 'pages/index',
-        text: '热门话题',
-        iconPath: 'images/home.png',
-        selectedIconPath: 'images/home_active.png'
-      }, {
-        pagePath: 'pages/news',
-        text: '科技动态',
-        iconPath: 'images/news.png',
-        selectedIconPath: 'images/news_active.png'
-      }, {
-        pagePath: 'pages/tech',
-        text: '开发者资讯',
-        iconPath: 'images/tech.png',
-        selectedIconPath: 'images/tech_active.png'
-      }]
     }
   };
 
   globalData = {
-    userInfo: null
   };
 
   constructor () {
@@ -60,18 +35,6 @@ export default class extends wepy.app {
   }
 
   onLaunch() {
-  }
-  getUserInfo(cb) {
-    const that = this
-    if (this.globalData.userInfo) {
-      return this.globalData.userInfo
-    }
-    wepy.getUserInfo({
-      success (res) {
-        that.globalData.userInfo = res.userInfo
-        cb && cb(res.userInfo)
-      }
-    })
   }
 }
 </script>

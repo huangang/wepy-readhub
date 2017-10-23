@@ -1,98 +1,76 @@
 <style lang="less">
   .container{
-    background-color: #fff;
+    background-color: #f0f0f0;
     width: 100%;
+    height: 100%;
   }
-  .title{
-    font-size: 16px;
-    line-height: 1.56em;
-    color: #545454;
-    font-weight: 500;
-    padding: 15px;
-    padding-bottom: 0;
-    margin-bottom: 15px;
-  }
-  .blink{
-    display: block;
-    -webkit-transition: color .05s ease-out;
-    transition: color .05s ease-out;
-  }
-  .inline-block{
-    display: inline-block;
-  }
-  .time{
-    font-size: 12px;
-    color: #999;
-    margin-left: 10px;
+  .article{
+    padding: 1em;
+    background-color: #fafdfa;
+    width: 80%;
     font-weight: 300;
+    margin-bottom: 1em;
+    margin-left: 5%;
+    border-radius:5px;
+  }
+  .title {
+    color: #000000;
   }
 </style>
 <template>
   <view class="container">
-    <view class="article" wx:for="{{topics}}" wx:key="item" wx-on:click="toggle(item)">
-      <view class="title" bindtap="tapTitle">
-        <view class="blink"> {{item.title}}
-          <view class="inline-block">
-            <view class="time">{{item.createdAt}}</view>
-          </view>
-        </view>
-
+    <view class="article" wx:for="{{topics}}" wx:key="item">
+      <view class="title" bindtap="toTopic" data-id="{{item.id}}">
+        {{item.title}}
       </view>
-      <view class="info" wx:if="{{item.show}}">{{item.info}}</view>
     </view>
   </view>
 </template>
-
 <script>
   import wepy from 'wepy'
   import api from '../api/api.js'
+  import moment from 'moment'
 
   export default class Index extends wepy.page {
-    config = {
-      navigationBarTitleText: '热门话题'
-    };
-    components = {
-    };
     data = {
-      topics: []
-    };
-
-    computed = {
-    };
-
-    methods = {
-      toggle: function (item) {
-        item.show = !item.show
-      },
-      tapTitle: function (e) {
-        console.log(e)
-      }
-    };
-
-    events = {
+      topics: [],
+      start: 0,
+      end: 0
     };
 
     async onLoad() {
-      let res = await api.getTopic()
-      this.topics = res.data.data
-      console.log(this.topics)
-      this.setData({topics: this.topics})
-//      let resp = await api.getHtmlByUrl('http://m.cnbeta.com/view/631939.htm')
-//      console.log(resp)
+      this.start = moment(moment().format('YYYY-MM-DD')).valueOf()
+      this.end = this.start + 86399999
+      await this.getTopicList(this.start, this.end)
     }
 
+    async getTopicList(start, end) {
+      let res = await api.getList({
+        start: start,
+        end: end
+      })
+      if (res) {
+        this.topics = this.topics.concat(res.data.data)
+        console.log(this.topics)
+        this.$apply()
+      }
+    }
     /**
      * 下拉加载更多
      */
     async onReachBottom () {
-      let lastTopics = this.topics[this.topics.length - 1]
-      let res = await api.getTopic({
-        lastCursor: lastTopics.order
-      })
-      if (res && res.data && res.data.data) {
-        this.topics = this.topics.concat(res.data.data)
-        console.log(res.data.data)
-        this.setData({topics: this.topics})
+      this.start -= 86400000
+      this.end = this.start + 86399999
+      this.$apply()
+      this.getTopicList(this.start, this.end)
+    }
+
+    methods = {
+      toTopic: function (event) {
+        console.log(event.target.dataset.id)
+        wepy.navigateTo({
+          url: 'topic?id=' + event.target.dataset.id
+        })
       }
     }
   }

@@ -40,3 +40,8 @@ wepy build --watch
 
 ## 说明
 [Readhub](https://readhub.me/) 是 小道消息的 作者 Fenng（冯大辉) 老师创业公司 无码科技 的第一款产品。这是一款极简的资讯类工具，旨在每天花几分钟了解互联网行业里发生的事情。目前主要分为热门话题 ，科技动态，开发者资讯三个部分。
+
+
+## api
+https://api.readhub.me/topic/wechat?start=1508601600000&end=1508774399999&type=day
+https://api.readhub.me/topic/wechat?start=1508083199999&end=1509292799999&type=week
