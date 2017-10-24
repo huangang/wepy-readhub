@@ -59,6 +59,7 @@
       this.start = new Date().setHours(0, 0, 0, 0)
       this.end = this.start + 86399999
       await this.getTopicList(this.start, this.end)
+      this.topics && (this.topics[0].time = '今天')
     }
 
     async getTopicList(start, end) {
