@@ -21,7 +21,7 @@ export default class extends wepy.app {
       navigationBarBackgroundColor: '#f0f0f0',
       navigationBarTitleText: 'ReadHub',
       navigationBarTextStyle: 'black',
-      enablePullDownRefresh: true
+      enablePullDownRefresh: false
     }
   };
 
