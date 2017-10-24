@@ -48,7 +48,7 @@
           {{topic.summary}}
         </view>
         <view class="footer">
-          {{topic.createdAt}}
+          {{topic.created}}
         </view>
       </view>
     </view>
@@ -57,6 +57,7 @@
 <script>
   import wepy from 'wepy'
   import api from '../api/api.js'
+  import timeago from 'timeago.js'
   export default class Topic extends wepy.page {
     data = {
       topic: {}
@@ -66,6 +67,7 @@
       console.log(res)
       if (res) {
         this.topic = res.data
+        this.topic.created = timeago().format(this.topic.createdAt, 'zh_CN')
         this.$apply()
       }
     }

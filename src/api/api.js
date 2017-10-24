@@ -16,7 +16,7 @@ const wxRequest = async (params = {}, url) => {
   return res
 }
 const getTopic = (params) => wxRequest(params, host + 'topic/' + params.id)
-const getList = (params) => wxRequest(params, host + 'topic/wechat?start=' + params.start + '&end=' + params.end + '&type=' + params.type || 'day')
+const getList = (params) => wxRequest(params, host + 'topic/wechat?start=' + params.start + '&end=' + params.end + '&type=' + (params.type || 'day'))
 module.exports = {
   getTopic,
   getList

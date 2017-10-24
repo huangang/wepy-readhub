@@ -11,7 +11,7 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "moment": "^2.19.1",
+    "timeago.js": "^3.0.2",
     "wepy": "^1.5.7",
     "wepy-async-function": "^1.4.4",
     "wepy-com-toast": "^1.0.2"

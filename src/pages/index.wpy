@@ -4,6 +4,18 @@
     width: 100%;
     height: 100%;
   }
+  .list{
+    color: #000000;
+    width: 100%;
+    height: 100%;
+  }
+  .time{
+    width: 80%;
+    margin-left: 5%;
+    padding: 2rpx 0;
+    font-size: 1.8em;
+    font-weight: 300;
+  }
   .article{
     padding: 1em;
     background-color: #fafdfa;
@@ -19,9 +31,14 @@
 </style>
 <template>
   <view class="container">
-    <view class="article" wx:for="{{topics}}" wx:key="item">
-      <view class="title" bindtap="toTopic" data-id="{{item.id}}">
-        {{item.title}}
+    <view class="list" wx:for="{{topics}}" wx:key="item">
+      <view class="time">
+        {{item.time}}
+      </view>
+      <view class="article" wx:for="{{item.list}}" wx:key="item">
+        <view class="title" bindtap="toTopic" data-id="{{item.id}}">
+          {{item.title}}
+        </view>
       </view>
     </view>
   </view>
@@ -29,7 +46,7 @@
 <script>
   import wepy from 'wepy'
   import api from '../api/api.js'
-  import moment from 'moment'
+  import timeago from 'timeago.js'
 
   export default class Index extends wepy.page {
     data = {
@@ -39,7 +56,7 @@
     };
 
     async onLoad() {
-      this.start = moment(moment().format('YYYY-MM-DD')).valueOf()
+      this.start = new Date().setHours(0, 0, 0, 0)
       this.end = this.start + 86399999
       await this.getTopicList(this.start, this.end)
     }
@@ -50,8 +67,11 @@
         end: end
       })
       if (res) {
-        this.topics = this.topics.concat(res.data.data)
-        console.log(this.topics)
+        let list = res.data.data
+        this.topics.push({
+          list: list,
+          time: timeago().format(start, 'zh_CN')
+        })
         this.$apply()
       }
     }
