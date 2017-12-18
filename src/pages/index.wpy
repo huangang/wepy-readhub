@@ -60,6 +60,7 @@
       this.end = this.start + 86399999
       await this.getTopicList(this.start, this.end)
       this.topics && (this.topics[0].time = '今天')
+      this.topics.length < 6 && this.onReachBottom()
     }
 
     async getTopicList(start, end) {
